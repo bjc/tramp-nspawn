@@ -1,0 +1,20 @@
+* Introduction
+=nspawn-tramp= adds support for =systemd-nspawn= containers with Emacs’
+TRAMP system.
+
+* Installation
+This package is not yet available on the various package sites
+
+** Direct download
+Download this repository to some location, then add the following to
+your Emacs initialization:
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/path/to/nspawn-tramp")
+  (require 'nspawn-tramp)
+#+end_src
+
+* Usage
+Use TRAMP as normal to access files on a container:
+#+begin_example
+  C-x C-f /nspawn:user@container:/path/to/file
+#+end_example
