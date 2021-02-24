@@ -1,4 +1,4 @@
-;;; nspawn-tramp -- TRAMP integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
+;;; nspawn-tramp.el -- TRAMP integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
 ;; Copyright © 2021 Brian Cully <bjc@kublai.com>
 
