@@ -104,7 +104,8 @@ see its function help for a description of the format."
   "Remove TRAMP method handler for nspawn conainers."
   (setf (alist-get nspawn-tramp-method tramp-methods nil t 'string=) nil))
 
-(defun nspawn-tramp--init ()
+;;;###autoload
+(defun nspawn-tramp-setup ()
   "Initialize systemd-nspawn support for TRAMP."
   (nspawn-tramp--remove-method)
   (nspawn-tramp--add-method)
@@ -113,7 +114,7 @@ see its function help for a description of the format."
 
 ;;;###autoload
 (eval-after-load 'tramp
-  (nspawn-tramp--init))
+  (nspawn-tramp-setup))
 
 (provide 'nspawn-tramp)
 ;;; nspawn-tramp.el ends here
