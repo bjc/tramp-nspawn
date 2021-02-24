@@ -69,11 +69,9 @@
   :type 'string
   :group 'nspawn-tramp)
 
-;;;###autoload
 (defconst nspawn-tramp-method "nspawn"
   "TRAMP method name to use to connect to systemd-nspawn containers.")
 
-;;;###autoload
 (defun nspawn-tramp--completion-function (&rest _args)
   "List systemd-nspawn containers available for connection.
 
@@ -88,7 +86,7 @@ see its function help for a description of the format."
          (machines (seq-take-while (lambda (name) name) first-words)))
     (mapcar (lambda (m) (list nil m)) machines)))
 
-;;;###autoload
+
 (defun nspawn-tramp--add-method ()
   "Add TRAMP method handler for nspawn conainers."
   (push `(,nspawn-tramp-method
@@ -102,12 +100,10 @@ see its function help for a description of the format."
           (tramp-remote-shell-args ("-i" "-c")))
         tramp-methods))
 
-;;;###autoload
 (defun nspawn-tramp--remove-method ()
   "Remove TRAMP method handler for nspawn conainers."
   (setf (alist-get nspawn-tramp-method tramp-methods nil t 'string=) nil))
 
-;;;###autoload
 (defun nspawn-tramp--init ()
   "Initialize systemd-nspawn support for TRAMP."
   (nspawn-tramp--remove-method)
@@ -116,7 +112,7 @@ see its function help for a description of the format."
                                  '((nspawn-tramp--completion-function ""))))
 
 ;;;###autoload
-(eval-after-load 'tramp-remote-path
+(eval-after-load 'tramp
   (nspawn-tramp--init))
 
 (provide 'nspawn-tramp)
