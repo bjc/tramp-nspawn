@@ -32,6 +32,10 @@
 ;;
 ;; ## Usage
 ;;
+;; Call ‘nspawn-tramp-setup’ in your Emacs initialization.
+;;
+;;     (add-hook 'after-init-hook 'nspawn-tramp-setup)
+;;
 ;; Open a file on a running systemd-nspawn container:
 ;;
 ;;     C-x C-f /nspawn:user@container:/path/to/file
@@ -101,7 +105,7 @@ see its function help for a description of the format."
         tramp-methods))
 
 (defun nspawn-tramp--remove-method ()
-  "Remove TRAMP method handler for nspawn conainers."
+  "Remove TRAMP method handler for nspawn containers."
   (setf (alist-get nspawn-tramp-method tramp-methods nil t 'string=) nil))
 
 (defun nspawn-tramp-unload-function ()
@@ -116,10 +120,6 @@ see its function help for a description of the format."
   (nspawn-tramp--add-method)
   (tramp-set-completion-function nspawn-tramp-method
                                  '((nspawn-tramp--completion-function ""))))
-
-;;;###autoload
-(eval-after-load 'tramp
-  (nspawn-tramp-setup))
 
 (provide 'nspawn-tramp)
 ;;; nspawn-tramp.el ends here
