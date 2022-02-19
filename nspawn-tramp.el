@@ -1,6 +1,6 @@
 ;;; nspawn-tramp.el -- TRAMP integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
-;; Copyright © 2021 Brian Cully <bjc@kublai.com>
+;; Copyright © 2021 Free Software Foundation, Inc.
 
 ;; Author: Brian Cully <bjc@kublai.com>
 ;; URL: https://github.com/bjc/nspawn-tramp
