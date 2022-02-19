@@ -3,6 +3,7 @@
 ;; Copyright © 2021 Free Software Foundation, Inc.
 
 ;; Author: Brian Cully <bjc@kublai.com>
+;; Maintainer: Brian Cully <bjc@kublai.com>
 ;; URL: https://github.com/bjc/nspawn-tramp
 ;; Keywords: tramp, nspawn, machinectl, systemd, systemd-nspawn
 ;; Maintainer: Brian Cully <bjc@kublai.com>
