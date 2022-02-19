@@ -7,7 +7,7 @@
 ;; URL: https://github.com/bjc/nspawn-tramp
 ;; Keywords: tramp, nspawn, machinectl, systemd, systemd-nspawn
 ;; Maintainer: Brian Cully <bjc@kublai.com>
-;; Version: 0.1
+;; Version: 1.0
 ;; Package-Requires: ((emacs "23"))
 
 ;;; License:
