@@ -27,7 +27,7 @@
 ;;; Commentary:
 
 ;;
-;; ‘tramp-nspawn’ allows Tramp to work with containers provided by
+;; ‘tramp-nspawn’ allows Tramp access to environments provided by
 ;; systemd-nspawn.
 ;;
 ;; ## Usage
