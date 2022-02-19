@@ -1,6 +1,6 @@
 ;;; nspawn-tramp.el -- TRAMP integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
-;; Copyright © 2021 Free Software Foundation, Inc.
+;; Copyright © 2021-2022 Free Software Foundation, Inc.
 
 ;; Author: Brian Cully <bjc@kublai.com>
 ;; Maintainer: Brian Cully <bjc@kublai.com>
@@ -39,16 +39,16 @@
 ;;
 ;; Open a file on a running systemd-nspawn container:
 ;;
-;;     C-x C-f /nspawn:user@container:/path/to/file
+;;     C-x C-f /nspawn:USER@CONTAINER:/path/to/file
 ;;
 ;; Where:
-;;     ‘user’          is the user on the container to connect as (optional)
-;;     ‘container’     is the container to connect to
+;;     USER          is the user on the container to connect as (optional)
+;;     CONTAINER     is the container to connect to
 ;;
 ;; ## Privileges
 ;;
 ;; systemd-nspawn and its container utilities often require super user
-;; access to run, and this package does not do privilege escalation in
+;; access to run, and this package does not escalate privileges in
 ;; order to accomplish that.
 ;;
 ;; One way of working around this using TRAMP’s built-in multi-hop
@@ -69,8 +69,8 @@
   :link '(url-link :tag "Github" "https://github.com/bjc/nspawn-tramp")
   :link '(emacs-commentary-link :tag "Commentary" "nspawn-tramp"))
 
-(defcustom nspawn-tramp-machinectl-path "machinectl"
-  "Path to machinectl executable."
+(defcustom nspawn-tramp-machinectl-file-name "machinectl"
+  "File name of machinectl executable."
   :type 'string
   :group 'nspawn-tramp)
 
@@ -83,7 +83,7 @@
 This function is used by ‘tramp-set-completion-function’, please
 see its function help for a description of the format."
   (let* ((raw-list (shell-command-to-string
-                    (concat nspawn-tramp-machinectl-path
+                    (concat nspawn-tramp-machinectl-file-name
                             " list -q")))
          (lines (cdr (split-string raw-list "\n")))
          (first-words (mapcar (lambda (line) (car (split-string line)))
@@ -93,9 +93,9 @@ see its function help for a description of the format."
 
 
 (defun nspawn-tramp--add-method ()
-  "Add TRAMP method handler for nspawn conainers."
+  "Add TRAMP method handler for nspawn containers."
   (push `(,nspawn-tramp-method
-          (tramp-login-program ,nspawn-tramp-machinectl-path)
+          (tramp-login-program ,nspawn-tramp-machinectl-file-name)
           (tramp-login-args (("shell")
                              ("-q")
                              ("--uid" "%u")
