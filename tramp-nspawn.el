@@ -68,8 +68,8 @@
   :link '(url-link :tag "Github" "https://github.com/bjc/tramp-nspawn")
   :link '(emacs-commentary-link :tag "Commentary" "tramp-nspawn"))
 
-(defcustom tramp-nspawn-machinectl-file-name "machinectl"
-  "File name of machinectl executable."
+(defcustom tramp-nspawn-machinectl-program "machinectl"
+  "Name of the machinectl program."
   :type 'string
   :group 'tramp-nspawn)
 
@@ -82,7 +82,7 @@
 This function is used by ‘tramp-set-completion-function’, please
 see its function help for a description of the format."
   (let* ((raw-list (shell-command-to-string
-                    (concat tramp-nspawn-machinectl-file-name
+                    (concat tramp-nspawn-machinectl-program
                             " list -q")))
          (lines (cdr (split-string raw-list "\n")))
          (first-words (mapcar (lambda (line) (car (split-string line)))
@@ -94,7 +94,7 @@ see its function help for a description of the format."
 (defun tramp-nspawn--add-method ()
   "Add Tramp method handler for nspawn containers."
   (push `(,tramp-nspawn-method
-          (tramp-login-program ,tramp-nspawn-machinectl-file-name)
+          (tramp-login-program ,tramp-nspawn-machinectl-program)
           (tramp-login-args (("shell")
                              ("-q")
                              ("--uid" "%u")
