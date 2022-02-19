@@ -1,4 +1,4 @@
-;;; nspawn-tramp.el -- TRAMP integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
+;;; nspawn-tramp.el -- Tramp integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
 ;; Copyright © 2021-2022 Free Software Foundation, Inc.
 
@@ -27,7 +27,7 @@
 ;;; Commentary:
 
 ;;
-;; ‘nspawn-tramp’ allows TRAMP to work with containers provided by
+;; ‘nspawn-tramp’ allows Tramp to work with containers provided by
 ;; systemd-nspawn.
 ;;
 ;; ## Usage
@@ -50,7 +50,7 @@
 ;; access to run, and this package does not escalate privileges in
 ;; order to accomplish that.
 ;;
-;; One way of working around this using TRAMP’s built-in multi-hop
+;; One way of working around this using Tramp’s built-in multi-hop
 ;; facilities with doas or sudo to raise your privileges.
 ;;
 ;; Another possibility is using polkit(8) to allow specific users
@@ -62,7 +62,7 @@
 (require 'tramp)
 
 (defgroup nspawn-tramp nil
-  "TRAMP integration for systemd-nspawn containers."
+  "Tramp integration for systemd-nspawn containers."
   :prefix "nspawn-tramp-"
   :group 'applications
   :link '(url-link :tag "Github" "https://github.com/bjc/nspawn-tramp")
@@ -74,7 +74,7 @@
   :group 'nspawn-tramp)
 
 (defconst nspawn-tramp-method "nspawn"
-  "TRAMP method name to use to connect to systemd-nspawn containers.")
+  "Tramp method name to use to connect to systemd-nspawn containers.")
 
 (defun nspawn-tramp--completion-function (&rest _args)
   "List systemd-nspawn containers available for connection.
@@ -92,7 +92,7 @@ see its function help for a description of the format."
 
 
 (defun nspawn-tramp--add-method ()
-  "Add TRAMP method handler for nspawn containers."
+  "Add Tramp method handler for nspawn containers."
   (push `(,nspawn-tramp-method
           (tramp-login-program ,nspawn-tramp-machinectl-file-name)
           (tramp-login-args (("shell")
@@ -105,18 +105,18 @@ see its function help for a description of the format."
         tramp-methods))
 
 (defun nspawn-tramp--remove-method ()
-  "Remove TRAMP method handler for nspawn containers."
+  "Remove Tramp method handler for nspawn containers."
   (setf (alist-get nspawn-tramp-method tramp-methods nil t 'string=) nil))
 
 (defun nspawn-tramp-unload-function ()
-  "Remove TRAMP method handler and completion functions."
+  "Remove Tramp method handler and completion functions."
   (tramp-set-completion-function nspawn-tramp-method nil)
   (nspawn-tramp--remove-method)
   nil)
 
 ;;;###autoload
 (defun nspawn-tramp-setup ()
-  "Initialize systemd-nspawn support for TRAMP."
+  "Initialize systemd-nspawn support for Tramp."
   (nspawn-tramp--add-method)
   (tramp-set-completion-function nspawn-tramp-method
                                  '((nspawn-tramp--completion-function ""))))
