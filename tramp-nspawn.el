@@ -1,13 +1,12 @@
-;;; nspawn-tramp.el -- TRAMP integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
+;;; tramp-nspawn.el -- Tramp integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
-;; Copyright © 2021 Free Software Foundation, Inc.
+;; Copyright © 2021-2022 Free Software Foundation, Inc.
 
 ;; Author: Brian Cully <bjc@kublai.com>
 ;; Maintainer: Brian Cully <bjc@kublai.com>
-;; URL: https://github.com/bjc/nspawn-tramp
+;; URL: https://github.com/bjc/tramp-nspawn
 ;; Keywords: tramp, nspawn, machinectl, systemd, systemd-nspawn
-;; Maintainer: Brian Cully <bjc@kublai.com>
-;; Version: 0.1
+;; Version: 1.0
 ;; Package-Requires: ((emacs "23"))
 
 ;;; License:
@@ -28,30 +27,30 @@
 ;;; Commentary:
 
 ;;
-;; ‘nspawn-tramp’ allows TRAMP to work with containers provided by
+;; ‘tramp-nspawn’ allows Tramp access to environments provided by
 ;; systemd-nspawn.
 ;;
 ;; ## Usage
 ;;
-;; Call ‘nspawn-tramp-setup’ in your Emacs initialization.
+;; Call ‘tramp-nspawn-setup’ in your Emacs initialization.
 ;;
-;;     (add-hook 'after-init-hook 'nspawn-tramp-setup)
+;;     (add-hook 'after-init-hook 'tramp-nspawn-setup)
 ;;
 ;; Open a file on a running systemd-nspawn container:
 ;;
-;;     C-x C-f /nspawn:user@container:/path/to/file
+;;     C-x C-f /nspawn:USER@CONTAINER:/path/to/file
 ;;
 ;; Where:
-;;     ‘user’          is the user on the container to connect as (optional)
-;;     ‘container’     is the container to connect to
+;;     USER          is the user on the container to connect as (optional)
+;;     CONTAINER     is the container to connect to
 ;;
 ;; ## Privileges
 ;;
 ;; systemd-nspawn and its container utilities often require super user
-;; access to run, and this package does not do privilege escalation in
+;; access to run, and this package does not escalate privileges in
 ;; order to accomplish that.
 ;;
-;; One way of working around this using TRAMP’s built-in multi-hop
+;; One way of working around this using Tramp’s built-in multi-hop
 ;; facilities with doas or sudo to raise your privileges.
 ;;
 ;; Another possibility is using polkit(8) to allow specific users
@@ -62,28 +61,28 @@
 
 (require 'tramp)
 
-(defgroup nspawn-tramp nil
-  "TRAMP integration for systemd-nspawn containers."
-  :prefix "nspawn-tramp-"
+(defgroup tramp-nspawn nil
+  "Tramp integration for systemd-nspawn containers."
+  :prefix "tramp-nspawn-"
   :group 'applications
-  :link '(url-link :tag "Github" "https://github.com/bjc/nspawn-tramp")
-  :link '(emacs-commentary-link :tag "Commentary" "nspawn-tramp"))
+  :link '(url-link :tag "Github" "https://github.com/bjc/tramp-nspawn")
+  :link '(emacs-commentary-link :tag "Commentary" "tramp-nspawn"))
 
-(defcustom nspawn-tramp-machinectl-path "machinectl"
-  "Path to machinectl executable."
+(defcustom tramp-nspawn-machinectl-program "machinectl"
+  "Name of the machinectl program."
   :type 'string
-  :group 'nspawn-tramp)
+  :group 'tramp-nspawn)
 
-(defconst nspawn-tramp-method "nspawn"
-  "TRAMP method name to use to connect to systemd-nspawn containers.")
+(defconst tramp-nspawn-method "nspawn"
+  "Tramp method name to use to connect to systemd-nspawn containers.")
 
-(defun nspawn-tramp--completion-function (&rest _args)
+(defun tramp-nspawn--completion-function (&rest _args)
   "List systemd-nspawn containers available for connection.
 
 This function is used by ‘tramp-set-completion-function’, please
 see its function help for a description of the format."
   (let* ((raw-list (shell-command-to-string
-                    (concat nspawn-tramp-machinectl-path
+                    (concat tramp-nspawn-machinectl-program
                             " list -q")))
          (lines (cdr (split-string raw-list "\n")))
          (first-words (mapcar (lambda (line) (car (split-string line)))
@@ -92,10 +91,10 @@ see its function help for a description of the format."
     (mapcar (lambda (m) (list nil m)) machines)))
 
 
-(defun nspawn-tramp--add-method ()
-  "Add TRAMP method handler for nspawn conainers."
-  (push `(,nspawn-tramp-method
-          (tramp-login-program ,nspawn-tramp-machinectl-path)
+(defun tramp-nspawn--add-method ()
+  "Add Tramp method handler for nspawn containers."
+  (push `(,tramp-nspawn-method
+          (tramp-login-program ,tramp-nspawn-machinectl-program)
           (tramp-login-args (("shell")
                              ("-q")
                              ("--uid" "%u")
@@ -105,22 +104,22 @@ see its function help for a description of the format."
           (tramp-remote-shell-args ("-i" "-c")))
         tramp-methods))
 
-(defun nspawn-tramp--remove-method ()
-  "Remove TRAMP method handler for nspawn containers."
-  (setf (alist-get nspawn-tramp-method tramp-methods nil t 'string=) nil))
+(defun tramp-nspawn--remove-method ()
+  "Remove Tramp method handler for nspawn containers."
+  (setf (alist-get tramp-nspawn-method tramp-methods nil t 'string=) nil))
 
-(defun nspawn-tramp-unload-function ()
-  "Remove TRAMP method handler and completion functions."
-  (tramp-set-completion-function nspawn-tramp-method nil)
-  (nspawn-tramp--remove-method)
+(defun tramp-nspawn-unload-function ()
+  "Remove Tramp method handler and completion functions."
+  (tramp-set-completion-function tramp-nspawn-method nil)
+  (tramp-nspawn--remove-method)
   nil)
 
 ;;;###autoload
-(defun nspawn-tramp-setup ()
-  "Initialize systemd-nspawn support for TRAMP."
-  (nspawn-tramp--add-method)
-  (tramp-set-completion-function nspawn-tramp-method
-                                 '((nspawn-tramp--completion-function ""))))
+(defun tramp-nspawn-setup ()
+  "Initialize systemd-nspawn support for Tramp."
+  (tramp-nspawn--add-method)
+  (tramp-set-completion-function tramp-nspawn-method
+                                 '((tramp-nspawn--completion-function ""))))
 
-(provide 'nspawn-tramp)
-;;; nspawn-tramp.el ends here
+(provide 'tramp-nspawn)
+;;; tramp-nspawn.el ends here
