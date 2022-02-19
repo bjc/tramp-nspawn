@@ -1,10 +1,10 @@
-;;; nspawn-tramp.el -- Tramp integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
+;;; tramp-nspawn.el -- Tramp integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
 ;; Copyright © 2021-2022 Free Software Foundation, Inc.
 
 ;; Author: Brian Cully <bjc@kublai.com>
 ;; Maintainer: Brian Cully <bjc@kublai.com>
-;; URL: https://github.com/bjc/nspawn-tramp
+;; URL: https://github.com/bjc/tramp-nspawn
 ;; Keywords: tramp, nspawn, machinectl, systemd, systemd-nspawn
 ;; Version: 1.0
 ;; Package-Requires: ((emacs "23"))
@@ -27,14 +27,14 @@
 ;;; Commentary:
 
 ;;
-;; ‘nspawn-tramp’ allows Tramp to work with containers provided by
+;; ‘tramp-nspawn’ allows Tramp to work with containers provided by
 ;; systemd-nspawn.
 ;;
 ;; ## Usage
 ;;
-;; Call ‘nspawn-tramp-setup’ in your Emacs initialization.
+;; Call ‘tramp-nspawn-setup’ in your Emacs initialization.
 ;;
-;;     (add-hook 'after-init-hook 'nspawn-tramp-setup)
+;;     (add-hook 'after-init-hook 'tramp-nspawn-setup)
 ;;
 ;; Open a file on a running systemd-nspawn container:
 ;;
@@ -61,28 +61,28 @@
 
 (require 'tramp)
 
-(defgroup nspawn-tramp nil
+(defgroup tramp-nspawn nil
   "Tramp integration for systemd-nspawn containers."
-  :prefix "nspawn-tramp-"
+  :prefix "tramp-nspawn-"
   :group 'applications
-  :link '(url-link :tag "Github" "https://github.com/bjc/nspawn-tramp")
-  :link '(emacs-commentary-link :tag "Commentary" "nspawn-tramp"))
+  :link '(url-link :tag "Github" "https://github.com/bjc/tramp-nspawn")
+  :link '(emacs-commentary-link :tag "Commentary" "tramp-nspawn"))
 
-(defcustom nspawn-tramp-machinectl-file-name "machinectl"
+(defcustom tramp-nspawn-machinectl-file-name "machinectl"
   "File name of machinectl executable."
   :type 'string
-  :group 'nspawn-tramp)
+  :group 'tramp-nspawn)
 
-(defconst nspawn-tramp-method "nspawn"
+(defconst tramp-nspawn-method "nspawn"
   "Tramp method name to use to connect to systemd-nspawn containers.")
 
-(defun nspawn-tramp--completion-function (&rest _args)
+(defun tramp-nspawn--completion-function (&rest _args)
   "List systemd-nspawn containers available for connection.
 
 This function is used by ‘tramp-set-completion-function’, please
 see its function help for a description of the format."
   (let* ((raw-list (shell-command-to-string
-                    (concat nspawn-tramp-machinectl-file-name
+                    (concat tramp-nspawn-machinectl-file-name
                             " list -q")))
          (lines (cdr (split-string raw-list "\n")))
          (first-words (mapcar (lambda (line) (car (split-string line)))
@@ -91,10 +91,10 @@ see its function help for a description of the format."
     (mapcar (lambda (m) (list nil m)) machines)))
 
 
-(defun nspawn-tramp--add-method ()
+(defun tramp-nspawn--add-method ()
   "Add Tramp method handler for nspawn containers."
-  (push `(,nspawn-tramp-method
-          (tramp-login-program ,nspawn-tramp-machinectl-file-name)
+  (push `(,tramp-nspawn-method
+          (tramp-login-program ,tramp-nspawn-machinectl-file-name)
           (tramp-login-args (("shell")
                              ("-q")
                              ("--uid" "%u")
@@ -104,22 +104,22 @@ see its function help for a description of the format."
           (tramp-remote-shell-args ("-i" "-c")))
         tramp-methods))
 
-(defun nspawn-tramp--remove-method ()
+(defun tramp-nspawn--remove-method ()
   "Remove Tramp method handler for nspawn containers."
-  (setf (alist-get nspawn-tramp-method tramp-methods nil t 'string=) nil))
+  (setf (alist-get tramp-nspawn-method tramp-methods nil t 'string=) nil))
 
-(defun nspawn-tramp-unload-function ()
+(defun tramp-nspawn-unload-function ()
   "Remove Tramp method handler and completion functions."
-  (tramp-set-completion-function nspawn-tramp-method nil)
-  (nspawn-tramp--remove-method)
+  (tramp-set-completion-function tramp-nspawn-method nil)
+  (tramp-nspawn--remove-method)
   nil)
 
 ;;;###autoload
-(defun nspawn-tramp-setup ()
+(defun tramp-nspawn-setup ()
   "Initialize systemd-nspawn support for Tramp."
-  (nspawn-tramp--add-method)
-  (tramp-set-completion-function nspawn-tramp-method
-                                 '((nspawn-tramp--completion-function ""))))
+  (tramp-nspawn--add-method)
+  (tramp-set-completion-function tramp-nspawn-method
+                                 '((tramp-nspawn--completion-function ""))))
 
-(provide 'nspawn-tramp)
-;;; nspawn-tramp.el ends here
+(provide 'tramp-nspawn)
+;;; tramp-nspawn.el ends here

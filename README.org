@@ -1,24 +1,24 @@
 * Introduction
-=nspawn-tramp= adds support for =systemd-nspawn= containers with Emacs’
+=tramp-nspawn= adds support for =systemd-nspawn= containers with Emacs’
 TRAMP system.
 
 * Installation
 ** ELPA
 This package is available on [[https://elpa.gnu.org/packages/nspawn-tramp.html][GNU ELPA]] and can be installed with
-=M-x package-install RET nspawn-tramp RET= from within Emacs itself.
+=M-x package-install RET tramp-nspawn RET= from within Emacs itself.
 
 ** Direct download
 Download this repository to some location, then add the following to
 your Emacs initialization:
 #+begin_src elisp
-  (add-to-list 'load-path "/path/to/nspawn-tramp")
-  (require 'nspawn-tramp)
+  (add-to-list 'load-path "/path/to/tramp-nspawn")
+  (require 'tramp-nspawn)
 #+end_src
 
 * Usage
-Call ~nspawn-tramp-setup~ to add support:
+Call ~tramp-nspawn-setup~ to add support:
 #+begin_src elisp
-  (add-hook 'after-init-hook 'nspawn-tramp-setup)
+  (add-hook 'after-init-hook 'tramp-nspawn-setup)
 #+end_src
 
 
