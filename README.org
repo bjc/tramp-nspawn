@@ -3,7 +3,9 @@
 TRAMP system.
 
 * Installation
-This package is not yet available on the various package sites
+** ELPA
+This package is available on [[https://elpa.gnu.org/packages/nspawn-tramp.html][GNU ELPA]] and can be installed with
+=M-x package-install RET nspawn-tramp RET= from within Emacs itself.
 
 ** Direct download
 Download this repository to some location, then add the following to
