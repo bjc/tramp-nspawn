@@ -1,4 +1,4 @@
-;;; tramp-nspawn.el -- Tramp integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
+;;; tramp-nspawn.el --- Tramp integration for systemd-nspawn containers  -*- lexical-binding: t; -*-
 
 ;; Copyright © 2021-2022 Free Software Foundation, Inc.
 
