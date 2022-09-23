@@ -6,7 +6,7 @@
 ;; Maintainer: Brian Cully <bjc@kublai.com>
 ;; URL: https://github.com/bjc/tramp-nspawn
 ;; Keywords: tramp, nspawn, machinectl, systemd, systemd-nspawn
-;; Version: 1.0
+;; Version: 1.0.1
 ;; Package-Requires: ((emacs "23"))
 
 ;;; License:
@@ -65,7 +65,7 @@
   "Tramp integration for systemd-nspawn containers."
   :prefix "tramp-nspawn-"
   :group 'applications
-  :link '(url-link :tag "Github" "https://github.com/bjc/tramp-nspawn")
+  :link '(url-link :tag "repo" "https://git.spork.org/tramp-nspawn.git")
   :link '(emacs-commentary-link :tag "Commentary" "tramp-nspawn"))
 
 (defcustom tramp-nspawn-machinectl-program "machinectl"
@@ -91,6 +91,7 @@ see its function help for a description of the format."
     (mapcar (lambda (m) (list nil m)) machines)))
 
 
+;; todo: check tramp-async-args and tramp-direct-async
 (defun tramp-nspawn--add-method ()
   "Add Tramp method handler for nspawn containers."
   (push `(,tramp-nspawn-method
