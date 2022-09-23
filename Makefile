@@ -1,6 +1,6 @@
 EMACS?=	emacs
 
-ELCS=	nspawn-tramp.elc
+ELCS=	tramp-nspawn.elc
 
 .PHONY:	all clean
 
